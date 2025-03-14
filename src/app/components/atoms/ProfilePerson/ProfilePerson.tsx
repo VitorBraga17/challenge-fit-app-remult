@@ -1,16 +1,21 @@
 import React from 'react';
-import styles from './ProfilePerson.module.css'; // Assuming you are using CSS Modules
-import { ProfilePerson as ProfilePersonData} from '@/app/types/ProfilePerson'; // Import the ProfilePerson type
+import styles from "./ProfilePerson.module.css"; // Assuming you are using CSS Modules
 
-export interface ProfilePersonProps extends ProfilePersonData {
-  onClick: () => void;
+export interface ProfilePersonProps {
+  name?: string;
+  photo?: string;
+  points?: number;
 }
 
-const ProfilePerson: React.FC<ProfilePersonProps> = ({ name, photoUrl, points, onClick }) => {
+const ProfilePerson: React.FC<ProfilePersonProps> = ({
+  name,
+  photo,
+  points,
+}) => {
   return (
-    <div className={styles.profileContainer} onClick={onClick}>
+    <div className={styles.profileContainer}>
       <div className={styles.photoContainer}>
-        <img src={photoUrl} alt={name} className={styles.photo} />
+        <img src={photo} alt={name} className={styles.photo} />
       </div>
       <div className={styles.infoContainer}>
         <h2 className={styles.name}>{name}</h2>

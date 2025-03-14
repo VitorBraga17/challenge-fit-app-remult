@@ -10,9 +10,9 @@
     width: 100%;
     padding: 8px;
     border-radius: 8px;
-    border: 1px solid #cccccc;
+    border: 1px solid #2596be;
     font-size: 1rem;
-    background-color: #ffffff;
+    background-color: #a6a4c2;
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }

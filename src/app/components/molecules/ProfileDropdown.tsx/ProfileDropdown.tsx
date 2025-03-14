@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import ProfilePerson, { ProfilePersonProps } from '@/app/components/atoms/ProfilePerson/ProfilePerson'; // Import the ProfilePerson component
-import styles from './ProfileDropdown.module.css'; // Assuming you are using CSS Modules
-import useSelectedUserStore from '@/app/store/selectedUser';
+import ProfilePerson from "@/app/components/atoms/ProfilePerson/ProfilePerson"; // Import the ProfilePerson component
+import styles from "./ProfileDropdown.module.css"; // Assuming you are using CSS Modules
+import useSelectedUserStore from "@/app/store/selectedUser";
+import { Users } from "@/app/shared/Users";
 
 interface ProfileDropdownProps {
-  profiles: ProfilePersonProps[];
+  profiles: Users[];
 }
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ profiles }) => {
-  const { selectedUser, setSelectedUser, clearSelectedUser } = useSelectedUserStore();
+  const { selectedUser, setSelectedUser } = useSelectedUserStore();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
@@ -29,7 +30,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ profiles }) => {
 
       {selectedUser && (
         <div className={styles.selectedProfile}>
-          <ProfilePerson {...selectedUser} onClick={() => {}} />
+          <ProfilePerson {...selectedUser} />
         </div>
       )}
     </div>

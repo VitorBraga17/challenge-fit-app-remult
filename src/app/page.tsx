@@ -1,13 +1,16 @@
 "use client";
-import styles from "./page.module.css";
 import ProfileDropdown from "./components/molecules/ProfileDropdown.tsx/ProfileDropdown";
 import DatePicker from "./components/molecules/DatePicker/DatePicker";
-import { Divider } from "@mui/material";
-import HabitList from "./components/molecules/HabitItem/HabitItem";
-import { habitItems } from "./types/HabitConfig";
 import Leaderboard from "./components/atoms/LeaderBoard/LeaderBoard";
-import { use, useEffect } from "react";
+import { mockDaysData } from "./mock/mockData";
 import useSelectedUserStore from "./store/selectedUser";
+import customDateFormatter from "./components/utils/CustomDateFormatter";
+import { useEffect, useState } from "react";
+import HabitListComponent from "./components/molecules/HabitItem/HabitListComponent";
+import { Users } from "./shared/Users";
+import { remult } from "remult";
+import AddHabit from "./components/atoms/AddHabit/AddHabit";
+import { habitItems } from "./types/HabitConfig";
 
 const entries = [
   { name: "Alice", points: 1200 },
@@ -17,8 +20,27 @@ const entries = [
   { name: "Eve", points: 600 },
 ];
 
+const usersRepo = remult.repo(Users);
+
 export default function Home() {
   const { selectedUser } = useSelectedUserStore();
+  const [habit, setHabit] = useState<string[] | null>(null);
+  const [users, setUsers] = useState<Users[]>([]);
+  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      usersRepo.find().then((users: Users[]) => setUsers(users));
+    };
+    fetchUsers();
+  }, []);
+
+  const fetchByDate = (date: Date | null) => {
+    const foundHabit = mockDaysData.find(
+      (day) => day.dateString === customDateFormatter(date)
+    );
+    setHabit(foundHabit?.value || null);
+  };
 
   const profiles = [
     {
@@ -41,22 +63,25 @@ export default function Home() {
     },
   ];
 
-  useEffect(() => {
-    console.log("TODO: fetch data from API");
-  }, []);
-
   return (
     <div>
-      <h1>Selecione Seu Perfil</h1>
-      <ProfileDropdown profiles={profiles} />
-      <Divider />
-      <DatePicker
-        value={null}
-        onChange={function (date: Date | null): void {
-          console.log("TODO: handle date change", date);
-        }}
+      <ProfileDropdown profiles={users} />
+      <AddHabit
+        habitsList={habitItems}
+        date={customDateFormatter(currentDate)}
       />
-      {selectedUser && <HabitList habits={habitItems} />}
+      {selectedUser && (
+        <DatePicker
+          value={null}
+          onChange={function (date: Date | null): void {
+            fetchByDate(date);
+            setCurrentDate(date);
+          }}
+        />
+      )}
+      {selectedUser && (
+        <HabitListComponent userDoneHabits={habit ? habit : []} />
+      )}
       {!selectedUser && <Leaderboard entries={entries} />}
     </div>
   );
