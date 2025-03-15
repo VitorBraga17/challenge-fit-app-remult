@@ -6,11 +6,16 @@ import { mockDaysData } from "./mock/mockData";
 import useSelectedUserStore from "./store/selectedUser";
 import customDateFormatter from "./components/utils/CustomDateFormatter";
 import { useEffect, useState } from "react";
-import HabitListComponent from "./components/molecules/HabitItem/HabitListComponent";
+import HabitListComponent, {
+  HabitListProps,
+} from "./components/molecules/HabitItem/HabitListComponent";
 import { Users } from "./shared/Users";
-import { remult } from "remult";
+import { remult } from "remult"; // eslint-disable-line
 import AddHabit from "./components/atoms/AddHabit/AddHabit";
-import { habitItems } from "./types/HabitConfig";
+import { Habits } from "./shared/Habits";
+import useSelectedChallengeHabitsStore from "./store/ChallengeHabits";
+import { DateRegister } from "./shared/DateRegister";
+import { DateRegisterHabits } from "./shared/DateRegisterHabits";
 
 const entries = [
   { name: "Alice", points: 1200 },
@@ -21,12 +26,28 @@ const entries = [
 ];
 
 const usersRepo = remult.repo(Users);
+const dateRegisterRepo = remult.repo(DateRegister);
+const dateRegisterHabitsRepo = remult.repo(DateRegisterHabits);
+const habitsRepo = remult.repo(Habits);
 
 export default function Home() {
   const { selectedUser } = useSelectedUserStore();
-  const [habit, setHabit] = useState<string[] | null>(null);
+  const { selectedChallengeHabits, setSelectedChallengeHabits } =
+    useSelectedChallengeHabitsStore();
   const [users, setUsers] = useState<Users[]>([]);
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [dateRegisterHabits, setDateRegisterHabits] = useState<
+    DateRegisterHabits[]
+  >([]);
+
+  useEffect(() => {
+    const fetchHabitsList = async () => {
+      habitsRepo
+        .find()
+        .then((habits: Habits[]) => setSelectedChallengeHabits(habits));
+    };
+    fetchHabitsList();
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -35,52 +56,118 @@ export default function Home() {
     fetchUsers();
   }, []);
 
-  const fetchByDate = (date: Date | null) => {
-    const foundHabit = mockDaysData.find(
-      (day) => day.dateString === customDateFormatter(date)
-    );
-    setHabit(foundHabit?.value || null);
+  const fetchByDate = async (date: Date | null) => {
+    if (!date || !selectedUser) return;
+
+    try {
+      const dateString = customDateFormatter(date);
+      const dateRegister = await dateRegisterRepo.find({
+        where: {
+          dateString,
+          user: selectedUser,
+        },
+      });
+
+      if (dateRegister.length > 0) {
+        const habits = await dateRegisterHabitsRepo.find({
+          where: { dateRegister: dateRegister[0] },
+        });
+        setDateRegisterHabits(habits);
+      } else {
+        setDateRegisterHabits([]);
+      }
+    } catch (error) {
+      console.error("Error fetching habits by date:", error);
+      setDateRegisterHabits([]);
+    }
   };
 
-  const profiles = [
-    {
-      name: "John Doe",
-      photoUrl: "https://via.placeholder.com/150",
-      points: 1234,
-      onClick: () => alert("John Doe clicked!"),
-    },
-    {
-      name: "Jane Smith",
-      photoUrl: "https://via.placeholder.com/150",
-      points: 5678,
-      onClick: () => alert("Jane Smith clicked!"),
-    },
-    {
-      name: "Alice Johnson",
-      photoUrl: "https://via.placeholder.com/150",
-      points: 9101,
-      onClick: () => alert("Alice Johnson clicked!"),
-    },
-  ];
+  const transformHabitsToListFormat = () => {
+    if (!selectedChallengeHabits) return [];
+
+    return selectedChallengeHabits.map((habit) => {
+      const isDone = dateRegisterHabits.some(
+        (drh) => drh.habits?.name === habit.name && drh.didIt
+      );
+
+      const iconName =
+        habit.icon
+          .split("_")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join("") + "Icon";
+
+      return {
+        habitName: habit.name,
+        done: isDone,
+        icon: iconName,
+      };
+    });
+  };
+
+  async function saveNewHabit(habitsSaved: string[]) {
+    if (!selectedUser || !currentDate) return;
+
+    try {
+      const dateRegister = await createDateRegister();
+      await saveHabitsForDateRegister(habitsSaved, dateRegister);
+    } catch (error) {
+      console.error("Error saving new habits:", error);
+    }
+  }
+
+  async function createDateRegister() {
+    return await dateRegisterRepo.save({
+      user: selectedUser!, //selectedUser is not null on line 63
+      dateString: customDateFormatter(currentDate),
+    });
+  }
+
+  async function saveHabitsForDateRegister(
+    habitsSaved: string[],
+    dateRegister: DateRegister
+  ) {
+    const habitPromises = habitsSaved.map((habit) => {
+      const matchedHabit = selectedChallengeHabits?.find(
+        (challengeHabit) => challengeHabit.name === habit
+      );
+
+      if (matchedHabit) {
+        return dateRegisterHabitsRepo.save({
+          didIt: true,
+          dateRegister,
+          habits: matchedHabit,
+        });
+      }
+    });
+
+    await Promise.all(habitPromises);
+  }
 
   return (
     <div>
       <ProfileDropdown profiles={users} />
-      <AddHabit
-        habitsList={habitItems}
-        date={customDateFormatter(currentDate)}
-      />
       {selectedUser && (
-        <DatePicker
-          value={null}
-          onChange={function (date: Date | null): void {
-            fetchByDate(date);
-            setCurrentDate(date);
+        <AddHabit
+          habitsList={selectedChallengeHabits!}
+          date={customDateFormatter(currentDate)}
+          saveHabit={(habitsSaved) => {
+            saveNewHabit(habitsSaved.map((habit) => habit.name));
           }}
         />
       )}
       {selectedUser && (
-        <HabitListComponent userDoneHabits={habit ? habit : []} />
+        <DatePicker
+          value={currentDate}
+          onChange={function (date: Date | null): void {
+            setCurrentDate(date);
+            fetchByDate(date);
+          }}
+        />
+      )}
+      {selectedUser && (
+        <HabitListComponent userDoneHabits={transformHabitsToListFormat()} />
       )}
       {!selectedUser && <Leaderboard entries={entries} />}
     </div>

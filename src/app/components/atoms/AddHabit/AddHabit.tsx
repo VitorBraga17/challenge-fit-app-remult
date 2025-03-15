@@ -1,26 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControlLabel, Switch, List, ListItem } from "@mui/material";
-import { HabitItem } from "@/app/types/HabitItem";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Switch,
+  List,
+  ListItem,
+} from "@mui/material";
+import { Habits } from "@/app/shared/Habits";
 
 export interface AddHabitProps {
-    habitsList: HabitItem[]
-    date: string,
-    saveHabit: (habitsSaved: HabitItem[]) => void
+  habitsList: Habits[];
+  date: string;
+  saveHabit: (habitsSaved: Habits[]) => void;
+}
+
+interface SwitchItem {
+  label: string;
+  checked: boolean;
 }
 
 const AddHabit: React.FC<AddHabitProps> = (addHabitProps: AddHabitProps) => {
   const [open, setOpen] = useState(false);
-  const [switches, setSwitches] = useState([
-    { label: "Diário", checked: false },
-    { label: "Semanal", checked: false },
-    { label: "Mensal", checked: false },
-  ]);
+  const [habitsForSave, setHabitsForSave] = useState<Habits[]>([]);
+  const [switches, setSwitches] = useState<SwitchItem[]>([]);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleToggle = (index: number) => {
-    
+  const handleClose = () => {
+    addHabitProps.saveHabit(habitsForSave);
+    setOpen(false);
+  };
+
+  const handleToggle = (item: Habits) => {
+    setSwitches((prevSwitches) => {
+      const updatedSwitches = prevSwitches.map((switchItem) => {
+        if (switchItem.label === item.label) {
+          return { ...switchItem, checked: !switchItem.checked };
+        }
+        return switchItem;
+      });
+
+      useEffect(() => {
+        const initialSwitches = addHabitProps.habitsList.map((habit) => ({
+          label: habit.label,
+          checked: false,
+        }));
+        setSwitches(initialSwitches);
+      }, [addHabitProps.habitsList]);
+
+      const updatedHabitsForSave = updatedSwitches
+        .filter((switchItem) => switchItem.checked)
+        .map(
+          (switchItem) =>
+            addHabitProps.habitsList.find(
+              (habit) => habit.label === switchItem.label
+            )!
+        );
+
+      setHabitsForSave(updatedHabitsForSave);
+      console.log(updatedHabitsForSave);
+      return updatedSwitches;
+    });
   };
 
   return (
@@ -30,20 +74,14 @@ const AddHabit: React.FC<AddHabitProps> = (addHabitProps: AddHabitProps) => {
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          Adicionar Dados do desafio no dia {}
-          {addHabitProps.date}
+          Adicionar Dados do desafio no dia {addHabitProps.date}
         </DialogTitle>
         <DialogContent>
           <List>
-            {addHabitProps.habitsList?.map((item, index) => (
-              <ListItem key={index}>
+            {addHabitProps.habitsList?.map((item) => (
+              <ListItem key={item.value}>
                 <FormControlLabel
-                  control={
-                    <Switch
-                      checked={item.checked}
-                      onChange={() => handleToggle(index)}
-                    />
-                  }
+                  control={<Switch onChange={() => handleToggle(item)} />}
                   label={item.label}
                 />
               </ListItem>

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { Box, Typography, IconButton, Paper, Stack } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { HabitItem } from '@/app/types/HabitItem';
-import YesNoBox from '../../atoms/YesnoItem/YesNoItem';
-import { habitItems } from "@/app/types/HabitConfig";
+import React, { useState } from "react";
+import { Box, Typography, Paper, Stack } from "@mui/material";
+import YesNoBox from "../../atoms/YesnoItem/YesNoItem";
+import * as MuiIcons from "@mui/icons-material";
 
-interface HabitListProps {
-  userDoneHabits: string[];
+export interface HabitListProps {
+  userDoneHabits: {
+    habitName: string;
+    done: boolean;
+    icon: string;
+  }[];
 }
 
 const HabitListComponent: React.FC<HabitListProps> = ({ userDoneHabits }) => {
@@ -27,15 +28,20 @@ const HabitListComponent: React.FC<HabitListProps> = ({ userDoneHabits }) => {
     }));
   };
 
-  const handleYesNoChange = (label: string) => {
-    return userDoneHabits.includes(label);
+  const handleYesNoChange = (habit: boolean) => {
+    return habit;
+  };
+
+  const renderIcon = (iconName: string) => {
+    const IconComponent = (MuiIcons as any)[iconName];
+    return IconComponent ? <IconComponent /> : null;
   };
 
   return (
     <Box>
-      {habitItems.map((habit: HabitItem) => (
+      {userDoneHabits.map((habit) => (
         <Paper
-          key={habit.key}
+          key={habit.habitName}
           elevation={3}
           sx={{ marginBottom: 2, padding: 2 }}
         >
@@ -45,23 +51,10 @@ const HabitListComponent: React.FC<HabitListProps> = ({ userDoneHabits }) => {
             justifyContent="space-between"
           >
             <Stack direction="row" alignItems="center" gap={2}>
-              <habit.Icon />
-              <Typography variant="h6">{habit.label}</Typography>
+              {renderIcon(habit.icon)}
+              <Typography variant="h6">{habit.habitName}</Typography>
             </Stack>
-            {habit.isCount && (
-              <Stack direction="row" alignItems="center" gap={1}>
-                <IconButton onClick={() => handleDecrement(habit.key)}>
-                  <RemoveIcon />
-                </IconButton>
-                <Typography variant="body1">
-                  {counts[habit.key] || 0}
-                </Typography>
-                <IconButton onClick={() => handleIncrement(habit.key)}>
-                  <AddIcon />
-                </IconButton>
-              </Stack>
-            )}
-            <YesNoBox value={handleYesNoChange(habit.key)} />
+            <YesNoBox value={handleYesNoChange(habit.done)} />
           </Stack>
         </Paper>
       ))}
