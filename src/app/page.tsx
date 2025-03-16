@@ -12,6 +12,8 @@ import Leaderboard, {
   LeaderboardEntry,
 } from "./components/atoms/LeaderBoard/LeaderBoard";
 import { habitItems } from "./types/IconNameMap";
+import ErrorDialog from "./components/atoms/ErrorDialog/ErrorDialog";
+import S3UploadButton from "./components/atoms/UploadButton/S3UploadButton";
 
 const usersRepo = remult.repo(User);
 
@@ -20,6 +22,9 @@ export default function Home() {
   const [currentDate, setCurrentDate] = useState<Date | null>(new Date());
   const { currentUser, setCurrentUser } = useCurrentUserStore();
   const [registerDay, setRegisterDay] = useState<RegisterDay>();
+
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const fetchUsersData = async () => {
     try {
@@ -89,18 +94,32 @@ export default function Home() {
           date: customDateFormatter(currentDate),
           activities: habitsForSaving as ActivityType[],
         });
+        setRegisterDay(findCurrentUserDate(currentDate));
         console.log(currentUser);
         //usersRepo.save(currentUser);
       } else {
         console.error("Date already exists in register_day");
+        setErrorMessage("Não é possível alterar uma data já salva");
+        setIsError(true);
       }
     } else {
       console.error("Cannot save: currentUser is null");
+      setErrorMessage("Selecione um usuário antes de tentar cadastrar algo");
+      setIsError(true);
     }
   }
 
   return (
     <div>
+      <S3UploadButton />
+      <ErrorDialog
+        open={isError}
+        onClose={() => {
+          setIsError(false);
+          setErrorMessage("");
+        }}
+        message={errorMessage}
+      />
       <ProfileDropdown profileList={profileList || []} />
       {currentUser && (
         <AddHabit

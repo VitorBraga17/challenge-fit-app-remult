@@ -8,6 +8,7 @@ export interface HabitListProps {
   habitsDone: ActivityType[] | undefined;
 }
 
+//TODO RENDERIZAR NOVAMENTE QUANDO ALGO FOR ALTERADO
 const HabitListComponent: React.FC<HabitListProps> = ({ habitsDone }) => {
   return (
     <Box>
