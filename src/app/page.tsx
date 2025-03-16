@@ -81,7 +81,7 @@ export default function Home() {
     console.log("Saving habits:", currentUser);
     if (currentUser) {
       if (
-        currentUser.register_day.find(
+        !currentUser.register_day.find(
           (day) => day.date == customDateFormatter(currentDate)
         )
       ) {
