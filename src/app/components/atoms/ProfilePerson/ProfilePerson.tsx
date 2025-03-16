@@ -1,10 +1,10 @@
-import React from 'react';
-import styles from "./ProfilePerson.module.css"; // Assuming you are using CSS Modules
+import React from "react";
+import { Avatar, Box, Typography, Paper } from "@mui/material";
 
 export interface ProfilePersonProps {
-  name?: string;
+  name: string;
   photo?: string;
-  points?: number;
+  points: number | 0;
 }
 
 const ProfilePerson: React.FC<ProfilePersonProps> = ({
@@ -12,16 +12,44 @@ const ProfilePerson: React.FC<ProfilePersonProps> = ({
   photo,
   points,
 }) => {
+  console.log("Photo URL:", photo); // Debugging photo prop
+  console.log("Name:", name); // Debugging name prop
+
+  const fallbackLetter = name ? name.charAt(0).toUpperCase() : "?";
+
   return (
-    <div className={styles.profileContainer}>
-      <div className={styles.photoContainer}>
-        <img src={photo} alt={name} className={styles.photo} />
-      </div>
-      <div className={styles.infoContainer}>
-        <h2 className={styles.name}>{name}</h2>
-        <p className={styles.points}>{points} points</p>
-      </div>
-    </div>
+    <Paper
+      elevation={3}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        padding: 2,
+        borderRadius: 2,
+        gap: 2,
+      }}
+    >
+      <Avatar
+        src={photo}
+        alt={name}
+        sx={{
+          width: 56,
+          height: 56,
+          fontSize: 24,
+          bgcolor: photo ? "transparent" : "primary.main",
+          color: photo ? "inherit" : "white", // Ensure text is visible
+        }}
+      >
+        {!photo && fallbackLetter}
+      </Avatar>
+      <Box>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          {name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {points} points
+        </Typography>
+      </Box>
+    </Paper>
   );
 };
 
