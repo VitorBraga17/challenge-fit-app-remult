@@ -1,33 +1,17 @@
 import { remultNextApp } from "remult/remult-next";
-import { Users } from "./shared/Users";
-import { Habits } from "./shared/Habits";
-import { DateRegister } from "./shared/DateRegister";
-import { DateRegisterHabits } from "./shared/DateRegisterHabits";
-import { DayPoints } from "./shared/DayPoints";
-import { SqlDatabase } from "remult";
-import { TursoDataProvider } from "remult/remult-turso";
-import { createClient } from "@libsql/client";
+import { MongoClient } from "mongodb";
+import { MongoDataProvider } from "remult/remult-mongo";
+import { User } from "./shared/Users";
 
-const DATABASE_URL = process.env.DATABASE_URL!;
-const TOKEN = process.env.DATABASE_TOKEN;
+const DATABASE_URL =
+  "mongodb+srv://joaovitor1702:X9rKlJq8AadG8gsf@cluster0.nmxip.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DATABASE_NAME = "fitnessApp"; // Replace with your actual database name
 
-if (!DATABASE_URL || !TOKEN) {
-  console.error(
-    "Missing DATABASE_URL or DATABASE_TOKEN in environment variables"
-  );
-  process.exit(1); // Exit if environment variables are missing
-}
-
-const client = createClient({
-  url: DATABASE_URL,
-  authToken: TOKEN,
-});
-
-console.log("Connecting to Turso database...");
+const client = new MongoClient(DATABASE_URL);
 
 export const api = remultNextApp({
-  entities: [Users, Habits, DateRegister, DateRegisterHabits, DayPoints],
-  dataProvider: new SqlDatabase(new TursoDataProvider(client)),
+  entities: [User],
+  dataProvider: DATABASE_URL
+    ? new MongoDataProvider(client.db(DATABASE_NAME), client)
+    : undefined,
 });
-
-console.log("Remult API initialized with Turso database.");

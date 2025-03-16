@@ -19,6 +19,7 @@
     "better-sqlite3": "^11.8.1",
     "challenge-fit-app-remult": "file:",
     "date-fns": "^4.1.0",
+    "mongodb": "^6.14.2",
     "next": "15.2.2",
     "postcss-import": "^16.1.0",
     "react": "^19.0.0",

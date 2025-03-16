@@ -1,0 +1,206 @@
+[
+  {
+    "id": "user_001",
+    "name": "Ingrid",
+    "points": 165,
+    "photo": "https://example.com/photos/ingrid.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_002",
+    "name": "Jeovana",
+    "points": 165,
+    "photo": "https://example.com/photos/jeovana.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_003",
+    "name": "João Lazaro",
+    "points": 45,
+    "photo": "https://example.com/photos/joao_lazaro.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino"]
+      }
+    ]
+  },
+  {
+    "id": "user_004",
+    "name": "João Vitor",
+    "points": 180,
+    "photo": "https://example.com/photos/joao_vitor.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_005",
+    "name": "Livia",
+    "points": 175,
+    "photo": "https://example.com/photos/livia.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_006",
+    "name": "Tati",
+    "points": 175,
+    "photo": "https://example.com/photos/tati.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_007",
+    "name": "Vanessa",
+    "points": 175,
+    "photo": "https://example.com/photos/vanessa.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_008",
+    "name": "Vitor Matos",
+    "points": 140,
+    "photo": "https://example.com/photos/vitor_matos.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_009",
+    "name": "Maria Carlina",
+    "points": 155,
+    "photo": "https://example.com/photos/maria_carlina.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_010",
+    "name": "Ruth",
+    "points": 175,
+    "photo": "https://example.com/photos/ruth.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_011",
+    "name": "Ana Luisa",
+    "points": 165,
+    "photo": "https://example.com/photos/ana_luisa.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_012",
+    "name": "Bruna",
+    "points": 175,
+    "photo": "https://example.com/photos/bruna.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_013",
+    "name": "Betania",
+    "points": 165,
+    "photo": "https://example.com/photos/betania.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_014",
+    "name": "Bruno",
+    "points": 170,
+    "photo": "https://example.com/photos/bruno.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_015",
+    "name": "Carol",
+    "points": 175,
+    "photo": "https://example.com/photos/carol.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_016",
+    "name": "Hellen Ale",
+    "points": 175,
+    "photo": "https://example.com/photos/hellen_ale.jpg",
+    "register_day": [
+      {
+        "date": "10/03/2025",
+        "activities": ["treino", "salada", "fruta", "agua"]
+      }
+    ]
+  },
+  {
+    "id": "user_017",
+    "name": "Hellen Gama",
+    "points": 40,
+    "photo": "https://example.com/photos/hellen_gama.jpg",
+    "register_day": [
+      {
+        "date": "12/03/2025",
+        "activities": ["fruta", "agua"]
+      }
+    ]
+  }
+]

@@ -1,47 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Paper, Stack } from "@mui/material";
 import YesNoBox from "../../atoms/YesnoItem/YesNoItem";
-import * as MuiIcons from "@mui/icons-material";
+import { habitItems } from "@/app/types/IconNameMap";
+import { ActivityType } from "@/app/shared/Users";
 
 export interface HabitListProps {
-  userDoneHabits: {
-    habitName: string;
-    done: boolean;
-    icon: string;
-  }[];
+  habitsDone: ActivityType[] | undefined;
 }
 
-const HabitListComponent: React.FC<HabitListProps> = ({ userDoneHabits }) => {
-  const [counts, setCounts] = useState<{ [key: string]: number }>({});
-
-  const handleIncrement = (key: string) => {
-    setCounts((prevCounts) => ({
-      ...prevCounts,
-      [key]: (prevCounts[key] || 0) + 1,
-    }));
-  };
-
-  const handleDecrement = (key: string) => {
-    setCounts((prevCounts) => ({
-      ...prevCounts,
-      [key]: Math.max((prevCounts[key] || 0) - 1, 0),
-    }));
-  };
-
-  const handleYesNoChange = (habit: boolean) => {
-    return habit;
-  };
-
-  const renderIcon = (iconName: string) => {
-    const IconComponent = (MuiIcons as any)[iconName];
-    return IconComponent ? <IconComponent /> : null;
-  };
-
+const HabitListComponent: React.FC<HabitListProps> = ({ habitsDone }) => {
   return (
     <Box>
-      {userDoneHabits.map((habit) => (
+      {habitItems.map((habit) => (
         <Paper
-          key={habit.habitName}
+          key={habit.key}
           elevation={3}
           sx={{ marginBottom: 2, padding: 2 }}
         >
@@ -51,10 +23,12 @@ const HabitListComponent: React.FC<HabitListProps> = ({ userDoneHabits }) => {
             justifyContent="space-between"
           >
             <Stack direction="row" alignItems="center" gap={2}>
-              {renderIcon(habit.icon)}
-              <Typography variant="h6">{habit.habitName}</Typography>
+              {/* Render the icon directly */}
+              {habit.Icon && <habit.Icon />}
+              <Typography variant="h6">{habit.label}</Typography>
             </Stack>
-            <YesNoBox value={handleYesNoChange(habit.done)} />
+            <YesNoBox value={habitsDone?.includes(habit.key) || false} />
+            {/* aqui ele valida se o nome ta na lista de hábitos que existem */}
           </Stack>
         </Paper>
       ))}

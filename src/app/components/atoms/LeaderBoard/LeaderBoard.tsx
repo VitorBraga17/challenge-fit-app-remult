@@ -2,32 +2,38 @@ import React from 'react';
 import { Box, Typography, Paper, Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { styled } from '@mui/system';
 
-interface LeaderboardEntry {
+export interface LeaderboardEntry {
   name: string;
-  points: number;
+  points: number | undefined;
   avatarUrl?: string; // Optional avatar image URL
 }
 
-interface LeaderboardProps {
+export interface LeaderboardProps {
   entries: LeaderboardEntry[];
 }
 
 const StyledListItem = styled(ListItem)({
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      transform: 'scale(1.02)',
-      backgroundColor: '#f5f5f5', // Light gray background on hover
-    },
-  });
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "scale(1.02)",
+    backgroundColor: "#f5f5f5", // Light gray background on hover
+  },
+});
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
   // Sort entries by points in descending order
-  const sortedEntries = [...entries].sort((a, b) => b.points - a.points);
+  const sortedEntries = [...entries].sort(
+    (a, b) => (b.points || 0) - (a.points || 0)
+  );
 
   return (
-    <Box sx={{ maxWidth: 400, margin: '0 auto' }}>
-      <Typography variant="h5" align="center" sx={{ marginBottom: 2, fontWeight: 'bold' }}>
-        Leaderboard
+    <Box sx={{ maxWidth: 400, margin: "0 auto" }}>
+      <Typography
+        variant="h5"
+        align="center"
+        sx={{ marginBottom: 2, fontWeight: "bold" }}
+      >
+        Classificação Geral
       </Typography>
       <Paper elevation={3} sx={{ borderRadius: 2 }}>
         <List>
@@ -42,7 +48,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
                 primary={entry.name}
                 secondary={`${entry.points} points`}
               />
-              <Typography variant="body1" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: "bold", color: "primary.main" }}
+              >
                 #{index + 1}
               </Typography>
             </StyledListItem>

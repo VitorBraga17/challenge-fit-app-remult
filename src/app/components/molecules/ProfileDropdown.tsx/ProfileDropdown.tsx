@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import ProfilePerson from "@/app/components/atoms/ProfilePerson/ProfilePerson"; // Import the ProfilePerson component
 import styles from "./ProfileDropdown.module.css"; // Assuming you are using CSS Modules
-import useSelectedUserStore from "@/app/store/selectedUser";
-import { Users } from "@/app/shared/Users";
-
-interface ProfileDropdownProps {
-  profiles: Users[];
+import useCurrentUserStore from "@/app/store/currentUserStore";
+export interface ProfileDropdownProps {
+  profileList: {
+    id: string;
+    name: string;
+    photo: string | undefined;
+    points: number;
+    setProfile: (id: string) => void;
+  }[];
 }
 
-const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ profiles }) => {
-  const { selectedUser, setSelectedUser } = useSelectedUserStore();
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ profileList }) => {
+  const { currentUser, setCurrentUser } = useCurrentUserStore();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
-    const profile = profiles.find((p) => p.name === selectedId);
-    setSelectedUser(profile || null);
+    const selectedProfileName = event.target.value;
+    const selectedProfile = profileList.find(
+      (profile) => profile.name === selectedProfileName
+    );
+    if (selectedProfile) {
+      selectedProfile.setProfile(selectedProfileName);
+    }
   };
 
   return (
     <div className={styles.dropdownContainer}>
       <select className={styles.dropdown} onChange={handleSelectChange}>
         <option value="">Classificação</option>
-        {profiles.map((profile) => (
-          <option key={profile.name} value={profile.name}>
+        {profileList.map((profile) => (
+          <option key={profile.id} value={profile.name}>
             {profile.name}
           </option>
         ))}
       </select>
 
-      {selectedUser && (
+      {currentUser && (
         <div className={styles.selectedProfile}>
-          <ProfilePerson {...selectedUser} />
+          <ProfilePerson
+            {...profileList.find((profile) => profile.id === currentUser.id)!}
+          />
         </div>
       )}
     </div>
