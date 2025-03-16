@@ -82,7 +82,7 @@ export default function Home() {
     if (currentUser) {
       if (
         currentUser.register_day.find(
-          (day) => (day.date = customDateFormatter(currentDate))
+          (day) => day.date == customDateFormatter(currentDate)
         )
       ) {
         currentUser.register_day.push({
