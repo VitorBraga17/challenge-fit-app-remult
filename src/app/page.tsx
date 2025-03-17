@@ -14,7 +14,10 @@ import Leaderboard, {
 import { habitItems } from "./types/IconNameMap";
 import ErrorDialog from "./components/atoms/ErrorDialog/ErrorDialog";
 import S3UploadButton from "./components/atoms/UploadButton/S3UploadButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { getObjectFromS3 } from "./clients/s3Client";
 
+//TODO -> contabilizar os pontos e somar para por no perfil do usuário
 const usersRepo = remult.repo(User);
 
 export default function Home() {
@@ -60,9 +63,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("Current User:", currentUser);
-    setRegisterDay(findCurrentUserDate(currentDate));
-    console.log("current Date:", customDateFormatter(currentDate));
+    const fetchData = async () => {
+      setRegisterDay(findCurrentUserDate(currentDate));
+    };
+    fetchData();
   }, [currentUser]);
 
   useEffect(() => {
@@ -82,20 +86,21 @@ export default function Home() {
     );
   }
 
-  function saveNewHabit(habitsForSaving: string[]) {
-    console.log("Saving habits:", currentUser);
+  function saveNewHabit(habitsForSaving: string[], pointsOfTheDay: number) {
+    //console.log("Saving habits:", currentUser);
     if (currentUser) {
       if (
         !currentUser.register_day.find(
           (day) => day.date == customDateFormatter(currentDate)
         )
       ) {
+        currentUser.points += pointsOfTheDay;
         currentUser.register_day.push({
           date: customDateFormatter(currentDate),
           activities: habitsForSaving as ActivityType[],
+          pointsOfTheDay: pointsOfTheDay,
         });
         setRegisterDay(findCurrentUserDate(currentDate));
-        console.log(currentUser);
         //usersRepo.save(currentUser);
       } else {
         console.error("Date already exists in register_day");
@@ -109,9 +114,32 @@ export default function Home() {
     }
   }
 
+  function setUserByLeaderBoard(name: string): void {
+    setCurrentUser(users?.find((user) => user.name === name) || null);
+  }
+
+  function savePhotoToUser(fileName: string) {
+    if (currentUser) {
+      currentUser.photo = fileName;
+      usersRepo.save(currentUser);
+    }
+  }
+
   return (
-    <div>
-      <S3UploadButton />
+    <div className="flex flex-col items-center justify-center min-h-screen py-4 px-4 bg-gray-100">
+      {currentUser && <S3UploadButton onUploadComplete={savePhotoToUser} />}
+      {currentUser && (
+        <div className="w-full max-w-2xl flex justify-start mb-4">
+          <ArrowBackIcon
+            onClick={() => setCurrentUser(null)}
+            style={{
+              cursor: "pointer",
+              fontSize: "2.5rem",
+              color: "#4A5568",
+            }}
+          />
+        </div>
+      )}
       <ErrorDialog
         open={isError}
         onClose={() => {
@@ -120,28 +148,41 @@ export default function Home() {
         }}
         message={errorMessage}
       />
-      <ProfileDropdown profileList={profileList || []} />
+      <div className="w-full max-w-2xl">
+        <ProfileDropdown profileList={profileList || []} />
+      </div>
       {currentUser && (
-        <AddHabit
-          habitsList={habitItems || []}
-          date={customDateFormatter(currentDate)}
-          saveHabit={(habitsSaved) => {
-            saveNewHabit(habitsSaved);
-          }}
-        />
+        <div className="w-full max-w-2xl mt-4 flex justify-between items-center">
+          <AddHabit
+            habitsList={habitItems || []}
+            date={customDateFormatter(currentDate)}
+            saveHabit={(habitsSaved, pointsOfTheDay) => {
+              saveNewHabit(habitsSaved, pointsOfTheDay);
+            }}
+          />
+          {currentUser && (
+            <DatePicker
+              value={currentDate}
+              onChange={(date: Date | null) => {
+                fetchByDate(date);
+              }}
+            />
+          )}
+        </div>
       )}
       {currentUser && (
-        <DatePicker
-          value={currentDate}
-          onChange={function (date: Date | null): void {
-            fetchByDate(date);
-          }}
-        />
+        <div className="w-full max-w-2xl mt-4">
+          <HabitListComponent habitsDone={registerDay?.activities} />
+        </div>
       )}
-      {currentUser && (
-        <HabitListComponent habitsDone={registerDay?.activities} />
+      {!currentUser && (
+        <div className="w-full max-w-2xl mt-4">
+          <Leaderboard
+            entries={leaderboardEntries || []}
+            setUser={setUserByLeaderBoard}
+          />
+        </div>
       )}
-      {!currentUser && <Leaderboard entries={leaderboardEntries || []} />}
     </div>
   );
 }

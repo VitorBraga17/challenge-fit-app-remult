@@ -35,6 +35,7 @@ export class User {
 export interface RegisterDay {
   date: string;
   activities: ActivityType[];
+  pointsOfTheDay: number;
 }
 
 export type ActivityType =

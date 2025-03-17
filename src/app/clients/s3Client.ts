@@ -18,26 +18,28 @@ const s3Client = new S3Client({
   region: "us-west-1",
 });
 
-export async function uploadObjectToS3(fileName: string, fileContent: Buffer | string, contentType: string) {
-    try {
-      const command = new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: `${FOLDER_NAME}${fileName}`,
-        Body: fileContent,
-        ContentType: contentType,
-      });
+export async function uploadObjectToS3(
+  fileName: string,
+  fileContent: Buffer | string,
+  contentType: string
+): Promise<string> {
+  try {
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: `${FOLDER_NAME}${fileName}`,
+      Body: fileContent,
+      ContentType: contentType,
+    });
 
-      await s3Client.send(command);
+    await s3Client.send(command);
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 
-      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-
-      console.log("Upload successful:", url);
-      return url;
-    } catch (error) {
-      console.error("Error uploading object:", error);
-      throw error;
-    }
+    return url.split("?")[0].replace("/s3/", "/object/public/");
+  } catch (error) {
+    console.error("Error uploading object:", error);
+    throw error;
   }
+}
 
   export async function getObjectFromS3(fileName: string): Promise<Buffer> {
     try {

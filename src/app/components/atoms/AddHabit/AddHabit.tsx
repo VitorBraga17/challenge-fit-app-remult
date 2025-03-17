@@ -16,7 +16,7 @@ import { HabitItem } from "@/app/types/IconNameMap";
 export interface AddHabitProps {
   habitsList: HabitItem[];
   date: string;
-  saveHabit: (activitiesOfTheDay: string[]) => void;
+  saveHabit: (activitiesOfTheDay: string[], pointsOfTheDay: number) => void;
 }
 
 interface SwitchItem {
@@ -31,8 +31,17 @@ const AddHabit: React.FC<AddHabitProps> = (addHabitProps: AddHabitProps) => {
 
   const handleOpen = () => setOpen(true);
   const handleSaveClose = () => {
-    addHabitProps.saveHabit(habitsForSave.map((habit) => habit.key));
+    addHabitProps.saveHabit(
+      habitsForSave.map((habit) => habit.key),
+      habitsForSave //calcula os pontos
+        .map((habit) => habit.value)
+        .reduce((acc, num) => acc + num, 0)
+    );
+    // Ensure both habitsForSave and switches reset properly
     setHabitsForSave([]);
+    setSwitches((prevSwitches) =>
+      prevSwitches.map((switchItem) => ({ ...switchItem, checked: false }))
+    );
     setOpen(false);
   };
 
@@ -75,7 +84,7 @@ const AddHabit: React.FC<AddHabitProps> = (addHabitProps: AddHabitProps) => {
   return (
     <>
       <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpen}>
-        Adicionar
+        novo registro
       </Button>
       <Dialog open={open} onClose={handleCancelClose}>
         <DialogTitle>

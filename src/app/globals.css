@@ -18,3 +18,40 @@
     --background-color: #f5f7fb;
     --text-color: #000000
 }
+
+/* Responsive utility classes */
+@media (max-width: 640px) {
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  .p-sm {
+    padding: 0.5rem;
+  }
+  .m-sm {
+    margin: 0.5rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .text-md {
+    font-size: 1rem;
+  }
+  .p-md {
+    padding: 1rem;
+  }
+  .m-md {
+    margin: 1rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .text-lg {
+    font-size: 1.25rem;
+  }
+  .p-lg {
+    padding: 1.5rem;
+  }
+  .m-lg {
+    margin: 1.5rem;
+  }
+}

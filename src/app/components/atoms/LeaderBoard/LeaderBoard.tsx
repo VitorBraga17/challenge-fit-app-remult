@@ -1,6 +1,16 @@
-import React from 'react';
-import { Box, Typography, Paper, Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
-import { styled } from '@mui/system';
+import React from "react";
+import {
+  Box,
+  Typography,
+  Paper,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@mui/material";
+import { styled } from "@mui/system";
+import useCurrentUserStore from "@/app/store/currentUserStore";
 
 export interface LeaderboardEntry {
   name: string;
@@ -10,6 +20,7 @@ export interface LeaderboardEntry {
 
 export interface LeaderboardProps {
   entries: LeaderboardEntry[];
+  setUser: (name: string) => void;
 }
 
 const StyledListItem = styled(ListItem)({
@@ -20,7 +31,8 @@ const StyledListItem = styled(ListItem)({
   },
 });
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({ entries, setUser }) => {
+  const { currentUser, setCurrentUser } = useCurrentUserStore();
   // Sort entries by points in descending order
   const sortedEntries = [...entries].sort(
     (a, b) => (b.points || 0) - (a.points || 0)
@@ -38,7 +50,12 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
       <Paper elevation={3} sx={{ borderRadius: 2 }}>
         <List>
           {sortedEntries.map((entry, index) => (
-            <StyledListItem key={index}>
+            <StyledListItem
+              key={index}
+              onClick={() => {
+                setUser(entry.name);
+              }}
+            >
               <ListItemAvatar>
                 <Avatar src={entry.avatarUrl} alt={entry.name}>
                   {!entry.avatarUrl && entry.name.charAt(0)}

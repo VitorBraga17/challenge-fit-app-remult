@@ -17,11 +17,11 @@ export type HabitItem = {
 };
 
 export const habitItems: HabitItem[] = [
-  { key: "treino", label: "Treino",value: 10, Icon: FitnessCenterIcon },
-  { key: "salada", label: "Salada",value: 5, Icon: RestaurantIcon },
-  { key: "fruta", label: "Frutas",value: 5, Icon: AppleIcon, isCount: true },
-  { key: "agua", label: "Água",value: 10, Icon: WaterDropIcon, isCount: true },
-  { key: "x9", label: "X9",value: 5, Icon: SpeedIcon },
-  { key: "alcool", label: "Álcool",value: -5, Icon: LocalBarIcon },
-  { key: "besteira", label: "Besteira",value: -5, Icon: CakeIcon },
+  { key: "treino", label: "Treino", value: 10, Icon: FitnessCenterIcon },
+  { key: "salada", label: "Salada", value: 5, Icon: RestaurantIcon },
+  { key: "fruta", label: "Frutas", value: 5, Icon: AppleIcon, isCount: true },
+  { key: "agua", label: "Água", value: 10, Icon: WaterDropIcon, isCount: true },
+  { key: "x9", label: "X9", value: 5, Icon: SpeedIcon },
+  { key: "alcool", label: "Álcool", value: -10, Icon: LocalBarIcon },
+  { key: "besteira", label: "Besteira", value: -5, Icon: CakeIcon },
 ];

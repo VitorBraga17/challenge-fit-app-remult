@@ -22,19 +22,21 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ profileList }) => {
     );
     if (selectedProfile) {
       selectedProfile.setProfile(selectedProfileName);
+    } else {
+      setCurrentUser(null);
     }
   };
 
   return (
     <div className={styles.dropdownContainer}>
-      <select className={styles.dropdown} onChange={handleSelectChange}>
+      {/* <select className={styles.dropdown} onChange={handleSelectChange}>
         <option value="">Classificação</option>
         {profileList.map((profile) => (
           <option key={profile.id} value={profile.name}>
             {profile.name}
           </option>
         ))}
-      </select>
+      </select> */}
 
       {currentUser && (
         <div className={styles.selectedProfile}>

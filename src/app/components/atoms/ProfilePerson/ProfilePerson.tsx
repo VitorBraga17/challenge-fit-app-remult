@@ -12,9 +12,6 @@ const ProfilePerson: React.FC<ProfilePersonProps> = ({
   photo,
   points,
 }) => {
-  console.log("Photo URL:", photo); // Debugging photo prop
-  console.log("Name:", name); // Debugging name prop
-
   const fallbackLetter = name ? name.charAt(0).toUpperCase() : "?";
 
   return (
