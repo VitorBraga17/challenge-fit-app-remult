@@ -1,7 +1,8 @@
+"use client";
 import React, { useState } from "react";
 import ProfilePerson from "@/app/components/atoms/ProfilePerson/ProfilePerson"; // Import the ProfilePerson component
 import styles from "./ProfileDropdown.module.css"; // Assuming you are using CSS Modules
-import useCurrentUserStore from "@/app/store/currentUserStore";
+import useCurrentUserStore from "../../../../app/store/currentUserStore";
 export interface ProfileDropdownProps {
   profileList: {
     id: string;

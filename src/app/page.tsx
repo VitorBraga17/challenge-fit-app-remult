@@ -5,13 +5,14 @@ import { User } from "./shared/Users";
 import Leaderboard, {
   LeaderboardEntry,
 } from "./components/atoms/LeaderBoard/LeaderBoard";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router";
+//import { useRouter } from "next/navigation";
 
 const usersRepo = remult.repo(User);
 
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const fetchUsersData = async () => {
     try {
@@ -36,7 +37,7 @@ export default function Home() {
   );
 
   function navigateToUserProfile(id: string): void {
-    router.push(`/profile/${id}`);
+    navigate(`/profile/${id}`);
   }
 
   return (

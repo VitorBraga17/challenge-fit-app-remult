@@ -1,5 +1,5 @@
 "use client";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { remult } from "remult";
 import { ActivityType, RegisterDay, User } from "../../shared/Users";
 import AddHabit from "../../components/atoms/AddHabit/AddHabit";
@@ -10,15 +10,15 @@ import ErrorDialog from "../../components/atoms/ErrorDialog/ErrorDialog";
 import BlobUploadButton from "../../components/atoms/UploadButton/BlobUploadButtons";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { habitItems } from "../../types/IconNameMap";
-import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import router from "next/router";
+import { useParams } from "react-router";
 
 const usersRepo = remult.repo(User);
+export default function UserProfile() {
+  //const { id } = useParams();
+  const { id } = useParams();
 
-export default function UserProfile({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
-  const { id } = use(params);
-  
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [currentDate, setCurrentDate] = useState<Date | null>(new Date());
   const [registerDay, setRegisterDay] = useState<RegisterDay>();
@@ -30,22 +30,18 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
     const fetchUser = async () => {
       try {
         setIsLoading(true);
-        // First make sure remult is properly initialized
-        if (!remult.apiClient.url) {
-          remult.apiClient.url = "/api";
-        }
-        
-        const users = await usersRepo.find({ 
-          where: { id: id } 
+
+        const users = await usersRepo.find({
+          where: { id: id },
         });
-        
+
         if (users && users.length > 0) {
           setCurrentUser(users[0]);
         } else {
           setErrorMessage("Usuário não encontrado");
           setIsError(true);
           setTimeout(() => {
-            router.push('/');
+            router.push("/");
           }, 2000);
         }
       } catch (error) {
@@ -70,7 +66,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
   function findCurrentUserDate(date: Date | null): RegisterDay | undefined {
     if (!currentUser || !date) return undefined;
-    
+
     return currentUser.register_day.find(
       (item) => item.date === customDateFormatter(date)
     );
@@ -78,7 +74,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
   function fetchByDate(date: Date | null) {
     if (!date) return;
-    
+
     setCurrentDate(date);
     setRegisterDay(findCurrentUserDate(date));
   }
@@ -92,8 +88,8 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
     try {
       const formattedDate = customDateFormatter(currentDate);
-      
-      if (!currentUser.register_day.find(day => day.date === formattedDate)) {
+
+      if (!currentUser.register_day.find((day) => day.date === formattedDate)) {
         const updatedUser = { ...currentUser };
         updatedUser.points += pointsOfTheDay;
         updatedUser.register_day.push({
@@ -101,17 +97,16 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
           activities: habitsForSaving as ActivityType[],
           pointsOfTheDay: pointsOfTheDay,
         });
-        
+
         setCurrentUser(updatedUser);
         setRegisterDay(findCurrentUserDate(currentDate));
-        
+
         // Save to database
-        usersRepo.save(updatedUser)
-          .catch(error => {
-            console.error("Error saving habits:", error);
-            setErrorMessage("Erro ao salvar os hábitos");
-            setIsError(true);
-          });
+        usersRepo.save(updatedUser).catch((error) => {
+          console.error("Error saving habits:", error);
+          setErrorMessage("Erro ao salvar os hábitos");
+          setIsError(true);
+        });
       } else {
         setErrorMessage("Não é possível alterar uma data já salva");
         setIsError(true);
@@ -125,20 +120,19 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
   function savePhotoToUser(fileName: string) {
     if (!currentUser) return;
-    
+
     try {
       const updatedUser = { ...currentUser };
       updatedUser.photo = fileName;
-      
+
       setCurrentUser(updatedUser);
-      
+
       // Save to database
-      usersRepo.save(updatedUser)
-        .catch(error => {
-          console.error("Error saving photo:", error);
-          setErrorMessage("Erro ao salvar a foto");
-          setIsError(true);
-        });
+      usersRepo.save(updatedUser).catch((error) => {
+        console.error("Error saving photo:", error);
+        setErrorMessage("Erro ao salvar a foto");
+        setIsError(true);
+      });
     } catch (error) {
       console.error("Error in savePhotoToUser:", error);
       setErrorMessage("Erro ao salvar a foto");
@@ -163,7 +157,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-4 px-4 bg-gray-100" >
+    <div className="flex flex-col items-center justify-center min-h-screen py-4 px-4 bg-gray-100">
       <ErrorDialog
         open={isError}
         onClose={() => {
@@ -172,7 +166,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
         }}
         message={errorMessage}
       />
-      
+
       <div className="w-full max-w-2xl">
         <div className="flex justify-between items-center mb-6">
           <Link href="/" className="flex items-center">
@@ -185,16 +179,16 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
             />
             <span className="ml-2">Voltar para o Leaderboard</span>
           </Link>
-          
+
           <BlobUploadButton onUploadComplete={savePhotoToUser} />
         </div>
-        
+
         <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <div className="flex items-center">
             {currentUser.photo && (
-              <img 
-                src={currentUser.photo} 
-                alt={currentUser.name} 
+              <img
+                src={currentUser.photo}
+                alt={currentUser.name}
                 className="w-16 h-16 rounded-full mr-4 object-cover"
               />
             )}
