@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { put, type PutBlobResult } from "@vercel/blob";
-import dotenv from "dotenv";
 import s3UploadFile from "@/app/clients/s3BlobClient";
 
 interface BlobButtonProps {

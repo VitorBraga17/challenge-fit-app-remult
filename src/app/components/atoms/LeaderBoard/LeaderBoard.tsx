@@ -13,6 +13,7 @@ import { styled } from "@mui/system";
 import useCurrentUserStore from "@/app/store/currentUserStore";
 
 export interface LeaderboardEntry {
+  id: string;
   name: string;
   points: number | undefined;
   avatarUrl?: string; // Optional avatar image URL
@@ -20,7 +21,7 @@ export interface LeaderboardEntry {
 
 export interface LeaderboardProps {
   entries: LeaderboardEntry[];
-  setUser: (name: string) => void;
+  setUser: (id: string) => void;
 }
 
 const StyledListItem = styled(ListItem)({
@@ -32,7 +33,7 @@ const StyledListItem = styled(ListItem)({
 });
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ entries, setUser }) => {
-  const { currentUser, setCurrentUser } = useCurrentUserStore();
+  //const { currentUser, setCurrentUser } = useCurrentUserStore();
   // Sort entries by points in descending order
   const sortedEntries = [...entries].sort(
     (a, b) => (b.points || 0) - (a.points || 0)
@@ -53,7 +54,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ entries, setUser }) => {
             <StyledListItem
               key={index}
               onClick={() => {
-                setUser(entry.name);
+                setUser(entry.id);
               }}
             >
               <ListItemAvatar>
