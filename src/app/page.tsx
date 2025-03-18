@@ -16,6 +16,7 @@ import ErrorDialog from "./components/atoms/ErrorDialog/ErrorDialog";
 import S3UploadButton from "./components/atoms/UploadButton/S3UploadButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { getObjectFromS3 } from "./clients/s3Client";
+import BlobUploadButton from "./components/atoms/UploadButton/BlobUploadButtons";
 
 //TODO -> contabilizar os pontos e somar para por no perfil do usuário
 const usersRepo = remult.repo(User);
@@ -127,7 +128,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-4 px-4 bg-gray-100">
-      {currentUser && <S3UploadButton onUploadComplete={savePhotoToUser} />}
+      {currentUser && <BlobUploadButton onUploadComplete={savePhotoToUser} />}
       {currentUser && (
         <div className="w-full max-w-2xl flex justify-start mb-4">
           <ArrowBackIcon

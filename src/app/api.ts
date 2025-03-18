@@ -3,9 +3,8 @@ import { MongoClient } from "mongodb";
 import { MongoDataProvider } from "remult/remult-mongo";
 import { User } from "./shared/Users";
 
-const DATABASE_URL =
-  "mongodb+srv://joaovitor1702:X9rKlJq8AadG8gsf@cluster0.nmxip.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const DATABASE_NAME = "fitnessApp"; // Replace with your actual database name
+const DATABASE_URL = process.env.NEXT_PUBLIC_MONGO_DB_URL!;
+const DATABASE_NAME = process.env.NEXT_PUBLIC_MONGO_DB_SCHEMA; 
 
 const client = new MongoClient(DATABASE_URL);
 
