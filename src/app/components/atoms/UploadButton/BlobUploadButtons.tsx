@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import s3UploadFile from "@/app/clients/s3BlobClient";
+import s3UploadFile from "@/clients/s3BlobClient";
 
 interface BlobButtonProps {
   onUploadComplete?: (fileName: string) => void;

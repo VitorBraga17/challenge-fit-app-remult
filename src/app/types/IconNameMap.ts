@@ -5,7 +5,7 @@ import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import CakeIcon from '@mui/icons-material/Cake';
 import SpeedIcon from '@mui/icons-material/Speed';
-import { ActivityType } from '../shared/Users';
+import { ActivityType } from "../../shared/Users";
 import { SvgIconComponent } from '@mui/icons-material';
 
 export type HabitItem = {

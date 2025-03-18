@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box, Typography, Paper, Stack } from "@mui/material";
 import YesNoBox from "../../atoms/YesnoItem/YesNoItem";
 import { habitItems } from "@/app/types/IconNameMap";
-import { ActivityType } from "@/app/shared/Users";
+import { ActivityType } from "@/shared/Users";
 
 export interface HabitListProps {
   habitsDone: ActivityType[] | undefined;

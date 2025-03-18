@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { uploadObjectToS3 } from "@/app/clients/s3Client";
+import { uploadObjectToS3 } from "@/clients/s3Client";
 import {
   Button,
   CircularProgress,

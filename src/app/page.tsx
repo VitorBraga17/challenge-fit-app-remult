@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { remult } from "remult";
-import { User } from "./shared/Users";
+import { User } from "../shared/Users";
 import Leaderboard, {
   LeaderboardEntry,
 } from "./components/atoms/LeaderBoard/LeaderBoard";

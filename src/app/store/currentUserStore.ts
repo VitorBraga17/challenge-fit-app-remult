@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User } from "../shared/Users";
+import { User } from "../../shared/Users";
 
 interface CurrentUserStore {
   currentUser: User | null;
