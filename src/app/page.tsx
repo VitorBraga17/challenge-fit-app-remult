@@ -36,7 +36,7 @@ export default function Home() {
   );
 
   function navigateToUserProfile(id: string): void {
-    router.push(`pages/profile/${id}`);
+    router.push(`profile/${id}`);
   }
 
   return (
