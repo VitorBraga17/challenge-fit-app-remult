@@ -1,7 +1,7 @@
 "use client";
 import { use, useEffect, useState } from "react";
 import { remult } from "remult";
-import { ActivityType, RegisterDay, User } from "../../shared/Users";
+import { ActivityType, RegisterDay, User } from "../../../shared/Users";
 import AddHabit from "../../components/atoms/AddHabit/AddHabit";
 import DatePicker from "../../components/molecules/DatePicker/DatePicker";
 import HabitListComponent from "../../components/molecules/HabitItem/HabitListComponent";
@@ -14,7 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 const usersRepo = remult.repo(User);
-
+export const dynamic = "force-dynamic";
 export default function UserProfile({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
